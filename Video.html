@@ -1,0 +1,423 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#211b29">
+  <title>A Little Note</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #211b29;
+      --ink: #59465b;
+      --pink: #f6bfd4;
+      --lav: #d9c8f4;
+      --muted: #806f82;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    /* VIDEO HERO */
+
+    .hero {
+      position: relative;
+      height: 100svh;
+      min-height: 560px;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      background: #211b29;
+    }
+
+    .hero video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(.65) brightness(.65);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        #17111b55,
+        #17111b33 50%,
+        #211b29 100%
+      );
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      width: min(90%, 700px);
+      text-align: center;
+      color: white;
+      padding: 25px;
+      will-change: transform, opacity;
+    }
+
+    .hero-content h1 {
+      font-family: Georgia, serif;
+      font-size: clamp(36px, 8vw, 65px);
+      font-weight: 500;
+      line-height: 1.15;
+      margin: 0 0 15px;
+    }
+
+    .hero-content p {
+      font-size: 14px;
+      letter-spacing: 2px;
+      opacity: .85;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 35px;
+      z-index: 3;
+      color: white;
+      font-size: 12px;
+      letter-spacing: 2px;
+      animation: float 2s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      50% { transform: translateY(-7px); }
+    }
+
+    /* FEEDBACK SECTION */
+
+    .feedback-section {
+      position: relative;
+      z-index: 4;
+      width: min(100% - 32px, 650px);
+      margin: -90px auto 0;
+      padding-bottom: 65px;
+    }
+
+    .card {
+      background: #ffffffed;
+      border: 1px solid #ffffff;
+      border-radius: 25px;
+      padding: 35px 25px;
+      box-shadow: 0 20px 60px #00000035;
+      backdrop-filter: blur(15px);
+    }
+
+    .decor {
+      font-size: 25px;
+      letter-spacing: 10px;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    h2 {
+      font: 500 clamp(27px, 6vw, 38px)/1.2 Georgia, serif;
+      text-align: center;
+      margin: 8px 0 12px;
+    }
+
+    .intro {
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+      margin-bottom: 27px;
+    }
+
+    form {
+      margin-top: 25px;
+    }
+
+    label {
+      display: block;
+      font-weight: 650;
+      font-size: 14px;
+      margin-bottom: 9px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 130px;
+      resize: vertical;
+      padding: 14px;
+      border: 1px solid #eaddec;
+      border-radius: 14px;
+      background: white;
+      font: inherit;
+      color: var(--ink);
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: #c5a9e9;
+      box-shadow: 0 0 0 3px #d9c8f455;
+    }
+
+    .submit-row {
+      text-align: center;
+      margin-top: 17px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 14px 27px;
+      background: var(--lav);
+      color: #594b76;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #c4afe9;
+      transition: transform .2s, opacity .2s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+    }
+
+    button:disabled {
+      opacity: .6;
+      cursor: wait;
+    }
+
+    .status {
+      min-height: 25px;
+      text-align: center;
+      font-size: 14px;
+      line-height: 1.5;
+      margin-top: 17px;
+    }
+
+    .foot {
+      text-align: center;
+      color: #99899b;
+      font-size: 12px;
+      margin-top: 25px;
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 29px 20px;
+      }
+
+      .hero {
+        min-height: 520px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- CINEMATIC VIDEO HERO -->
+
+  <section class="hero" id="hero">
+
+    <video
+      id="hero-video"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+    >
+      <source
+        src="https://res.cloudinary.com/oxeshvov/video/upload/f_auto,q_auto/v1795597820/cute-video_1.mp4"
+      >
+    </video>
+
+    <div class="hero-content" id="hero-content">
+      <h1>A Little Note</h1>
+      <p>A MOMENT TO PAUSE AND REFLECT</p>
+    </div>
+
+    <div class="scroll-hint">
+      SCROLL TO CONTINUE ↓
+    </div>
+
+  </section>
+
+  <!-- FEEDBACK CARD -->
+
+  <section class="feedback-section" id="feedback-section">
+
+    <div class="card">
+
+      <div class="decor" aria-hidden="true">✦ ♡ ✧</div>
+
+      <h2>Share Your Thoughts</h2>
+
+      <p class="intro">
+        Take a moment to leave a message.
+        Your thoughts are welcome.
+      </p>
+
+      <form id="feedback-form">
+
+        <label for="feedback">
+          Your message
+        </label>
+
+        <textarea
+          id="feedback"
+          maxlength="2000"
+          placeholder="Write your message here..."
+          required
+        ></textarea>
+
+        <div class="submit-row">
+          <button id="send-button" type="submit">
+            Send message ✨
+          </button>
+        </div>
+
+        <p
+          class="status"
+          id="status"
+          role="status"
+          aria-live="polite"
+        ></p>
+
+      </form>
+
+      <p class="foot">
+        Made with care · A Little Note
+      </p>
+
+    </div>
+
+  </section>
+
+  <script>
+    // EMAILJS CONFIGURATION
+
+    const EMAILJS_PUBLIC_KEY = "s2a_eSK1LXLCbTx3J";
+    const EMAILJS_SERVICE_ID = "service_41i882r";
+    const EMAILJS_TEMPLATE_ID = "template_mcx53bk";
+
+    emailjs.init({
+      publicKey: EMAILJS_PUBLIC_KEY
+    });
+
+    // FEEDBACK FORM
+
+    const form = document.getElementById("feedback-form");
+    const sendButton = document.getElementById("send-button");
+    const statusMessage = document.getElementById("status");
+
+    form.addEventListener("submit", async (event) => {
+
+      event.preventDefault();
+
+      const message = document
+        .getElementById("feedback")
+        .value.trim();
+
+      if (!message) {
+        statusMessage.textContent = "Please write a message.";
+        return;
+      }
+
+      sendButton.disabled = true;
+      statusMessage.textContent = "Sending your message...";
+
+      try {
+
+        await emailjs.send(
+          EMAILJS_SERVICE_ID,
+          EMAILJS_TEMPLATE_ID,
+          {
+            choice: message,
+            submitted_at: new Date().toLocaleString()
+          }
+        );
+
+        statusMessage.textContent =
+          "Your message was sent successfully. Thank you!";
+
+        form.reset();
+
+      } catch (error) {
+
+        console.error("EmailJS error:", error);
+
+        statusMessage.textContent =
+          "Unable to send your message. Please try again.";
+
+      } finally {
+
+        sendButton.disabled = false;
+
+      }
+
+    });
+
+    // SCROLL-LINKED HEADLINE ANIMATION
+
+    const hero = document.getElementById("hero");
+    const headline = document.getElementById("hero-content");
+
+    let ticking = false;
+
+    function updateHeadline() {
+
+      const distance = Math.max(hero.offsetHeight * 0.65, 1);
+
+      const progress = Math.min(
+        Math.max(window.scrollY / distance, 0),
+        1
+      );
+
+      headline.style.opacity = 1 - progress;
+      headline.style.transform =
+        `translateY(${-65 * progress}px)`;
+
+      ticking = false;
+    }
+
+    window.addEventListener("scroll", () => {
+
+      if (!ticking) {
+        window.requestAnimationFrame(updateHeadline);
+        ticking = true;
+      }
+
+    }, { passive: true });
+
+    updateHeadline();
+
+  </script>
+
+</body>
+</html>
