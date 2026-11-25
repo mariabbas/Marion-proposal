@@ -1,0 +1,22 @@
+.buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  min-height: 65px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.video-wrap {
+  margin: 20px 0;
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+video {
+  width: 100%;
+  display: block;
+}
