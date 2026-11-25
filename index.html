@@ -21,9 +21,33 @@
     <p class="intro">Will you marry me?</p>
 
     <div class="buttons" id="buttons">
-    <button class="btn yes" id="yes">YES ✨</button>
-    <button class="btn no" id="no">NO 🙈</button>
-  </div>
+  <button class="btn" id="continueBtn">Yes✨</button>
+  <button class="btn" id="laterBtn">No</button>
+    </div>
+    <script>
+  const continueBtn = document.getElementById("continueBtn");
+  const laterBtn = document.getElementById("laterBtn");
+  const buttons = document.getElementById("buttons");
+
+  // Continue opens the video page
+  continueBtn.addEventListener("click", () => {
+    window.location.href = "video.html";
+  });
+
+  // Alternate button relocates when clicked
+  laterBtn.addEventListener("click", () => {
+    laterBtn.style.position = "fixed";
+
+    const maxX = window.innerWidth - laterBtn.offsetWidth - 20;
+    const maxY = window.innerHeight - laterBtn.offsetHeight - 20;
+
+    const x = Math.max(20, Math.random() * maxX);
+    const y = Math.max(20, Math.random() * maxY);
+
+    laterBtn.style.left = x + "px";
+    laterBtn.style.top = y + "px";
+  });
+    </script>
   </main>
   <main class="card" id="video-page" hidden>
   <div class="decor">✦ ♡ ✧</div>
